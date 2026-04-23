@@ -17,7 +17,7 @@ ZeroTrace runs a 6-tool recon pipeline against a target, feeds the output to a f
 
 | Purpose | Model |
 |---|---|
-| Vulnerability analysis | `zerotrace-v2:latest` (Foundations-Sec 8B) |
+| Vulnerability analysis | `zerotrace-v2:latest` (Foundation-Sec 8B) |
 | Exploit generation | `zerotrace-deepseek:latest` (DeepSeek Coder 6.7B) |
 | Report generation | `mistral:7b-instruct-q8_0` |
 
@@ -90,13 +90,62 @@ AI_Pentest_Windows/
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) 18+
-- [Ollama](https://ollama.ai/) with the three models pulled
+- [Ollama](https://ollama.com/download)
 - [Nmap](https://nmap.org/)
 - [Nuclei](https://github.com/projectdiscovery/nuclei)
 - [FFuf](https://github.com/ffuf/ffuf)
 - [SQLMap](https://sqlmap.org/)
 - [JWT Tool](https://github.com/ticarpi/jwt_tool)
+- [Python 3](https://www.python.org/downloads/) (required for SQLMap and JWT Tool)
 - [Metasploit Framework](https://www.metasploit.com/) (optional — msfrpcd must be running)
+
+## Installation Guide
+
+### 1. Nmap
+1. Go to https://nmap.org/download.html
+2. Download the **Windows self-installer** (.exe)
+3. Run the installer and follow the steps
+4. Verify: open Command Prompt and run `nmap --version`
+
+### 2. Nuclei
+1. Go to https://github.com/projectdiscovery/nuclei/releases
+2. Download `nuclei_windows_amd64.zip`
+3. Extract it and move `nuclei.exe` to `C:\Windows\System32\`
+4. Verify: `nuclei --version`
+
+### 3. FFuf
+1. Go to https://github.com/ffuf/ffuf/releases
+2. Download `ffuf_windows_amd64.zip`
+3. Extract it and move `ffuf.exe` to `C:\Windows\System32\`
+4. Verify: `ffuf --version`
+
+### 4. SQLMap
+1. Make sure Python 3 is installed: https://www.python.org/downloads/
+2. Run: `pip install sqlmap`
+3. Verify: `sqlmap --version`
+
+### 5. JWT Tool
+1. Make sure Python 3 is installed
+2. Run:
+   ```
+   pip install requests termcolor pycryptodomex
+   git clone https://github.com/ticarpi/jwt_tool
+   ```
+3. The tool runs as a Python script — ZeroTrace calls it directly, no PATH setup needed
+
+### 6. Ollama + AI Models
+1. Download and install Ollama from https://ollama.com/download
+2. Pull the required models:
+   ```
+   ollama pull zerotrace-v2:latest
+   ollama pull zerotrace-deepseek:latest
+   ollama pull mistral:7b-instruct-q8_0
+   ```
+
+### 7. Node.js
+1. Download Node.js 18+ from https://nodejs.org/
+2. Run the installer
+3. Verify: `node --version`
 
 ## Setup
 
