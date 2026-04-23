@@ -17,8 +17,8 @@ ZeroTrace runs a 6-tool recon pipeline against a target, feeds the output to a f
 
 | Purpose | Model |
 |---|---|
-| Vulnerability analysis | `zerotrace-v2:latest` |
-| Exploit generation | `zerotrace-deepseek:latest` |
+| Vulnerability analysis | `zerotrace-v2:latest` (Foundations-Sec 8B) |
+| Exploit generation | `zerotrace-deepseek:latest` (DeepSeek Coder 6.7B) |
 | Report generation | `mistral:7b-instruct-q8_0` |
 
 ## Recon Pipeline
