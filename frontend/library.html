@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroTrace — Library</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="nav-brand">
+            <img src="icon.png" alt="ZeroTrace">
+            ZeroTrace
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/vulnerability-analysis.html">Vuln Analysis</a>
+            <a href="/exploit-generation.html">Exploit Gen</a>
+            <a href="/dashboards.html">Dashboards</a>
+            <a href="/library.html" class="active">Library</a>
+        </div>
+    </nav>
+
+    <div class="main-content" style="max-width:1600px;">
+        <div class="page-header">
+            <h1>Library</h1>
+            <p>All past reports stored locally on your machine</p>
+        </div>
+
+        <!-- Loading -->
+        <div id="libraryLoading" class="loading-pulse">
+            <div class="pulse-dots"><div class="pulse-dot"></div><div class="pulse-dot"></div><div class="pulse-dot"></div></div>
+            <span>Loading sessions…</span>
+        </div>
+
+        <!-- Two-column layout -->
+        <div id="libraryColumns" class="library-columns" style="display:none;">
+
+            <!-- LEFT: Exploit Generation -->
+            <div class="library-col">
+                <div class="library-col-header">
+                    <span class="library-col-icon">⚡</span>
+                    <div>
+                        <h2 class="library-col-title">Exploit Generation</h2>
+                        <p class="library-col-sub">PoC exploits and run guides</p>
+                    </div>
+                    <span class="badge badge-scanning" id="exploitCount">0</span>
+                </div>
+                <div id="exploitGrid"></div>
+                <div id="exploitEmpty" class="empty-state" style="display:none;padding:2rem 1rem;">
+                    <div class="empty-state-icon" style="font-size:1.5rem;">⚡</div>
+                    <h3>No exploit sessions</h3>
+                    <p>Use Exploit Generation to create reports</p>
+                    <a href="/exploit-generation.html" class="btn btn-primary" style="margin-top:0.75rem;">Generate Exploits</a>
+                </div>
+            </div>
+
+            <!-- RIGHT: Vulnerability Analysis -->
+            <div class="library-col">
+                <div class="library-col-header">
+                    <span class="library-col-icon">🔍</span>
+                    <div>
+                        <h2 class="library-col-title">Vulnerability Analysis</h2>
+                        <p class="library-col-sub">Recon + AI vulnerability reports</p>
+                    </div>
+                    <span class="badge badge-completed" id="vulnCount">0</span>
+                </div>
+                <div id="vulnGrid"></div>
+                <div id="vulnEmpty" class="empty-state" style="display:none;padding:2rem 1rem;">
+                    <div class="empty-state-icon" style="font-size:1.5rem;">🔍</div>
+                    <h3>No analysis sessions</h3>
+                    <p>Run a vulnerability analysis to see reports here</p>
+                    <a href="/vulnerability-analysis.html" class="btn btn-primary" style="margin-top:0.75rem;">Run Analysis</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Empty State (both columns empty) -->
+        <div id="libraryEmpty" class="empty-state" style="display:none;">
+            <div class="empty-state-icon">🔍</div>
+            <h3>No reports yet</h3>
+            <p>Run a vulnerability analysis or generate exploits to see results here</p>
+            <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1rem;">
+                <a href="/vulnerability-analysis.html" class="btn btn-primary">Vuln Analysis</a>
+                <a href="/exploit-generation.html" class="btn">Exploit Gen</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Side Panel Overlay -->
+    <div class="side-panel-overlay" id="panelOverlay" onclick="closePanel()"></div>
+
+    <!-- Side Panel -->
+    <div class="side-panel" id="sidePanel">
+        <div class="side-panel-header">
+            <h3 id="panelTitle">Session Details</h3>
+            <button class="side-panel-close" onclick="closePanel()">✕</button>
+        </div>
+        <div class="side-panel-body">
+            <div class="panel-section">
+                <h4>Overview</h4>
+                <div class="panel-meta-row"><span>Target</span><span id="panelTarget">—</span></div>
+                <div class="panel-meta-row"><span>Type</span><span id="panelType">—</span></div>
+                <div class="panel-meta-row"><span>Date</span><span id="panelDate">—</span></div>
+                <div class="panel-meta-row"><span>Session ID</span><span id="panelSessionId" style="font-family:'JetBrains Mono',monospace;font-size:0.78rem;">—</span></div>
+                <div class="panel-meta-row"><span>Status</span><span id="panelStatus">—</span></div>
+                <div class="panel-meta-row"><span>Scan Type</span><span id="panelScanType">—</span></div>
+                <div class="panel-meta-row"><span>Vulnerabilities</span><span id="panelVulnCount">—</span></div>
+                <div class="panel-meta-row"><span>Overall Risk</span><span id="panelRisk">—</span></div>
+            </div>
+            <div class="panel-section">
+                <h4>Reconnaissance Preview</h4>
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dot red"></div>
+                        <div class="terminal-dot yellow"></div>
+                        <div class="terminal-dot green"></div>
+                        <span class="terminal-title">recon output</span>
+                    </div>
+                    <div class="terminal-body" id="panelReconPreview" style="max-height:180px;">No recon data</div>
+                </div>
+            </div>
+            <div class="panel-section" id="panelVulnSection">
+                <h4>Findings</h4>
+                <div id="panelVulnList"></div>
+            </div>
+        </div>
+        <div class="side-panel-footer">
+            <button class="btn btn-primary btn-sm" id="panelPdfBtn" onclick="panelDownloadPdf()" style="display:none;">Download PDF</button>
+            <button class="btn btn-sm" id="panelMdBtn" onclick="panelDownloadMarkdown()" style="display:none;">Markdown</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroTrace</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="nav-brand">
+            <img src="icon.png" alt="ZeroTrace">
+            ZeroTrace
+        </a>
+        <div class="nav-links">
+            <a href="/" class="active">Home</a>
+            <a href="/vulnerability-analysis.html">Vuln Analysis</a>
+            <a href="/exploit-generation.html">Exploit Gen</a>
+            <a href="/dashboards.html">Dashboards</a>
+            <a href="/library.html">Library</a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <!-- Hero -->
+        <div class="hero">
+            <img src="logo.png" alt="ZeroTrace" class="hero-logo">
+            <p class="hero-subtitle">Autonomous AI penetration testing, running entirely on your machine</p>
+            <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+                <a href="/vulnerability-analysis.html" class="btn btn-primary">Vulnerability Analysis</a>
+                <a href="/exploit-generation.html" class="btn">Exploit Generation</a>
+            </div>
+        </div>
+
+        <!-- Pipeline -->
+        <div class="pipeline-section">
+            <h2>Workflows</h2>
+            <div class="pipeline-cards" style="grid-template-columns:repeat(2,1fr);">
+                <div class="pipeline-card">
+                    <span class="pipeline-step">Workflow A</span>
+                    <h3>Vulnerability Analysis</h3>
+                    <span class="model-badge">nmap · nuclei · ffuf · sqlmap · jwt · metasploit · zerotrace-v2 · mistral</span>
+                    <p>Automated reconnaissance against a target followed by AI vulnerability identification, CVE mapping, and a professional PDF assessment report.</p>
+                    <a href="/vulnerability-analysis.html" class="btn btn-primary" style="margin-top:1rem;display:inline-flex;">Run Analysis →</a>
+                </div>
+                <div class="pipeline-card">
+                    <span class="pipeline-step">Workflow B</span>
+                    <h3>Exploit Generation</h3>
+                    <span class="model-badge">zerotrace-deepseek · metasploit modules · mistral</span>
+                    <p>Upload a vulnerability report or JSON file — ZeroTrace generates a working PoC exploit for each finding with step-by-step run instructions.</p>
+                    <a href="/exploit-generation.html" class="btn" style="margin-top:1rem;display:inline-flex;">Generate Exploits →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="features-section">
+            <h2>Models</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>Foundation-Sec 8B</h3>
+                    <p>Fine-tuned vulnerability analysis with CVE and MITRE ATT&amp;CK mapping.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>DeepSeek Coder 6.7B</h3>
+                    <p>Fine-tuned exploit generation — produces working PoC code per vulnerability.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📄</div>
+                    <h3>Mistral 7B</h3>
+                    <p>Professional report writing with structured findings, summaries, and remediation guidance.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>100% Offline</h3>
+                    <p>No data leaves your machine. All models run locally via Ollama.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

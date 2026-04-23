@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="0; url=/vulnerability-analysis.html">
+    <title>ZeroTrace — Start Test</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="nav-brand">
+            <img src="icon.png" alt="ZeroTrace">
+            ZeroTrace
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/start-test.html" class="active">Start Test</a>
+            <a href="/library.html">Library</a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="page-header">
+            <h1>Start New Test</h1>
+            <p>Configure your target and launch the autonomous penetration testing pipeline</p>
+        </div>
+
+        <!-- Config Card -->
+        <div class="card" id="configCard">
+            <div class="input-group">
+                <label for="target">Target URL / IP</label>
+                <input type="text" id="target" placeholder="e.g. 192.168.1.10:3000 or https://example.com">
+            </div>
+            <div class="input-group">
+                <label for="scanType">Scan Type</label>
+                <select id="scanType">
+                    <option value="quick">Quick Scan — Common ports (fast)</option>
+                    <option value="full">Full Scan — All ports 1–65535</option>
+                    <option value="stealth">Stealth Scan — Slow &amp; quiet (-sS)</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" onclick="startNewSession()">
+                Launch Pipeline
+            </button>
+        </div>
+
+        <!-- Active Session -->
+        <div id="sessionPanel" style="display:none;">
+
+            <!-- 5-Stage Progress Bar -->
+            <div class="stage-progress" id="stageProgress">
+                <div class="stage" id="stage-recon">
+                    <div class="stage-dot">1</div>
+                    <span class="stage-label">Reconnaissance</span>
+                </div>
+                <div class="stage" id="stage-analysis">
+                    <div class="stage-dot">2</div>
+                    <span class="stage-label">Vuln Analysis</span>
+                </div>
+                <div class="stage" id="stage-exploits">
+                    <div class="stage-dot">3</div>
+                    <span class="stage-label">Exploit Gen</span>
+                </div>
+                <div class="stage" id="stage-report">
+                    <div class="stage-dot">4</div>
+                    <span class="stage-label">Report Gen</span>
+                </div>
+                <div class="stage" id="stage-complete">
+                    <div class="stage-dot">5</div>
+                    <span class="stage-label">Complete</span>
+                </div>
+            </div>
+
+            <!-- Current Step Banner -->
+            <div id="currentStepBanner" style="
+                display:flex; align-items:center; gap:14px;
+                background:var(--elevated); border:1px solid var(--accent);
+                border-left:4px solid var(--accent);
+                border-radius:10px; padding:1rem 1.5rem; margin-bottom:1.5rem;">
+                <div class="pulse-dots" style="flex-shrink:0;">
+                    <div class="pulse-dot"></div>
+                    <div class="pulse-dot"></div>
+                    <div class="pulse-dot"></div>
+                </div>
+                <div style="flex:1;">
+                    <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:3px;" id="bannerStepLabel">Step 1 of 5</div>
+                    <div style="font-size:1rem;font-weight:600;color:var(--text);" id="bannerStepName">Reconnaissance — Running Nmap…</div>
+                </div>
+                <div style="display:flex; flex-direction:column; align-items:flex-end; gap:5px; font-size:0.8rem; flex-shrink:0;">
+                    <span style="color:var(--text-muted);">Target: <span id="sessionTargetDisplay" style="color:var(--text);font-weight:500;"></span></span>
+                    <span><span id="sessionStatusBadge" class="badge badge-scanning">initializing</span></span>
+                </div>
+            </div>
+            <div style="font-size:0.72rem; color:var(--text-dim); margin-bottom:1.5rem; font-family:'JetBrains Mono',monospace;">
+                session: <span id="sessionIdDisplay"></span>
+            </div>
+
+            <!-- STEP 1: Reconnaissance -->
+            <div class="card step-section" id="stepRecon">
+                <div class="step-header">
+                    <div class="step-status-dot"></div>
+                    <h4>Step 1 — Reconnaissance</h4>
+                </div>
+                <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">Running Nmap against the target…</p>
+                <div id="reconLoading" class="loading-pulse">
+                    <div class="pulse-dots">
+                        <div class="pulse-dot"></div>
+                        <div class="pulse-dot"></div>
+                        <div class="pulse-dot"></div>
+                    </div>
+                    <span>Nmap scan in progress</span>
+                </div>
+                <div id="reconOutput" style="display:none;">
+                    <div class="terminal">
+                        <div class="terminal-header">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot yellow"></div>
+                            <div class="terminal-dot green"></div>
+                            <span class="terminal-title">nmap — scan output</span>
+                        </div>
+                        <div class="terminal-body" id="reconContent"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 2: Vulnerability Analysis -->
+            <div class="card step-section" id="stepAnalysis" style="display:none;">
+                <div class="step-header">
+                    <div class="step-status-dot"></div>
+                    <h4>Step 2 — Vulnerability Analysis</h4>
+                </div>
+                <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">
+                    zerotrace-v2:latest is analysing the scan results and identifying vulnerabilities…
+                </p>
+                <div id="analysisLoading" class="loading-pulse">
+                    <div class="pulse-dots">
+                        <div class="pulse-dot"></div>
+                        <div class="pulse-dot"></div>
+                        <div class="pulse-dot"></div>
+                    </div>
+                    <span>Model inference in progress (may take several minutes)</span>
+                </div>
+                <div id="analysisOutput" style="display:none;">
+                    <div id="vulnCards"></div>
+                </div>
+            </div>
+
+            <!-- STEP 3: Exploit Generation -->
+            <div class="card step-section" id="stepExploits" style="display:none;">
+                <div class="step-header">
+                    <div class="step-status-dot"></div>
+                    <h4>Step 3 — Exploit Generation</h4>
+                </div>
+                <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">
+                    zerotrace-deepseek:latest is generating exploit code for each vulnerability…
+                </p>
+                <div id="exploitsLoading" class="loading-pulse">
+                    <div class="pulse-dots">
+                        <div class="pulse-dot"></div>
+                        <div class="pulse-dot"></div>
+                        <div class="pulse-dot"></div>
+                    </div>
+                    <span id="exploitsLoadingText">Generating exploits…</span>
+                </div>
+                <div id="exploitsOutput" style="display:none;">
+                    <div id="exploitCards"></div>
+                </div>
+            </div>
+
+            <!-- STEP 4: Report Generation -->
+            <div class="card step-section" id="stepReport" style="display:none;">
+                <div class="step-header">
+                    <div class="step-status-dot"></div>
+                    <h4>Step 4 — Report Generation</h4>
+                </div>
+                <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">
+                    mistral:7b-instruct-q8_0 is writing the professional penetration testing report…
+                </p>
+                <div id="reportLoading" class="loading-pulse">
+                    <div class="pulse-dots">
+                        <div class="pulse-dot"></div>
+                        <div class="pulse-dot"></div>
+                        <div class="pulse-dot"></div>
+                    </div>
+                    <span>Generating report (may take several minutes)</span>
+                </div>
+                <div id="reportOutput" style="display:none;">
+                    <p style="color:var(--success); font-weight:600; margin-bottom:1rem;">✓ Report generated successfully</p>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                        <button class="btn btn-primary" onclick="downloadPdf()">Download PDF Report</button>
+                        <button class="btn" onclick="downloadMarkdown()">Download Markdown</button>
+                        <a href="/library.html" class="btn">View in Library</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

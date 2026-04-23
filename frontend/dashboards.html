@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroTrace — Dashboards</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="nav-brand">
+            <img src="icon.png" alt="ZeroTrace">
+            ZeroTrace
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/vulnerability-analysis.html">Vuln Analysis</a>
+            <a href="/exploit-generation.html">Exploit Gen</a>
+            <a href="/dashboards.html" class="active">Dashboards</a>
+            <a href="/library.html">Library</a>
+        </div>
+    </nav>
+
+    <div class="main-content">
+
+        <!-- TARGET LIST VIEW -->
+        <div id="dashboardsView">
+            <div class="page-header">
+                <h1>Dashboards</h1>
+                <p>Select a target to view its vulnerability dashboard</p>
+            </div>
+
+            <div id="dashLoading" class="loading-pulse">
+                <div class="pulse-dots"><div class="pulse-dot"></div><div class="pulse-dot"></div><div class="pulse-dot"></div></div>
+                <span>Loading targets…</span>
+            </div>
+
+            <div id="dashGrid" class="target-grid" style="display:none;"></div>
+
+            <div id="dashEmpty" class="empty-state" style="display:none;">
+                <div class="empty-state-icon">📊</div>
+                <h3>No targets yet</h3>
+                <p>Run a vulnerability analysis to populate dashboards</p>
+                <a href="/vulnerability-analysis.html" class="btn btn-primary">Run Vuln Analysis</a>
+            </div>
+        </div>
+
+        <!-- SINGLE TARGET DASHBOARD VIEW -->
+        <div id="targetDashboard" style="display:none;">
+            <!-- Back Button -->
+            <div style="margin-bottom:1.5rem;">
+                <button class="btn" onclick="showDashboardList()">← Back to Targets</button>
+            </div>
+
+            <div class="page-header">
+                <h1 id="dbTargetTitle">Target Dashboard</h1>
+                <p id="dbTargetMeta">Loading…</p>
+            </div>
+
+            <!-- Top Stats Row -->
+            <div class="db-stats-row" id="dbStatsRow">
+                <div class="db-stat-card">
+                    <div class="db-stat-number" id="dbTotalVulns">—</div>
+                    <div class="db-stat-label">Total Vulnerabilities</div>
+                </div>
+                <div class="db-stat-card">
+                    <div class="db-stat-number" id="dbTotalScans">—</div>
+                    <div class="db-stat-label">Scans Performed</div>
+                </div>
+                <div class="db-stat-card db-stat-critical">
+                    <div class="db-stat-number" id="dbCritCount">—</div>
+                    <div class="db-stat-label">Critical</div>
+                </div>
+                <div class="db-stat-card db-stat-high">
+                    <div class="db-stat-number" id="dbHighCount">—</div>
+                    <div class="db-stat-label">High</div>
+                </div>
+                <div class="db-stat-card db-stat-medium">
+                    <div class="db-stat-number" id="dbMedCount">—</div>
+                    <div class="db-stat-label">Medium</div>
+                </div>
+                <div class="db-stat-card db-stat-low">
+                    <div class="db-stat-number" id="dbLowCount">—</div>
+                    <div class="db-stat-label">Low</div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="db-charts-row">
+                <!-- Severity Distribution -->
+                <div class="card" style="flex:1;">
+                    <h3 style="font-size:0.85rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:1.25rem;">Severity Distribution</h3>
+                    <div id="dbSeverityChart" class="db-bar-chart"></div>
+                </div>
+                <!-- Impact Distribution -->
+                <div class="card" style="flex:1;">
+                    <h3 style="font-size:0.85rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:1.25rem;">Impact Distribution</h3>
+                    <div id="dbImpactChart" class="db-bar-chart"></div>
+                </div>
+                <!-- Likelihood Distribution -->
+                <div class="card" style="flex:1;">
+                    <h3 style="font-size:0.85rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:1.25rem;">Likelihood Distribution</h3>
+                    <div id="dbLikelihoodChart" class="db-bar-chart"></div>
+                </div>
+            </div>
+
+            <!-- Vulnerability List -->
+            <div class="card">
+                <h3 style="font-size:0.85rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:1.25rem;">All Vulnerabilities</h3>
+                <div id="dbVulnTable"></div>
+            </div>
+
+            <!-- Scan History -->
+            <div class="card">
+                <h3 style="font-size:0.85rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:1.25rem;">Scan History</h3>
+                <div id="dbScanHistory"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
